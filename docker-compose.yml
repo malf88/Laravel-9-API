@@ -1,0 +1,104 @@
+version: '3.5'
+services:
+    app:
+        image: app
+        container_name: ${APP_NAME}_app
+        restart: unless-stopped
+        build:
+            context: ./
+            dockerfile: docker/Dockerfile
+            args:
+                - "BUILD_APP_ENV=${APP_ENV}"
+        env_file:
+            - .env
+        environment:
+            - CONTAINER_ROLE=app
+            - USERID=${USERID:-1001}
+        healthcheck:
+            test: php -i || exit 1
+            interval: 30s
+            retries: 5
+            start_period: 30s
+            timeout: 10s
+        volumes:
+            - ./:/var/www/
+        networks:
+            - traefik-public
+    scheduler:
+        image: app
+        container_name: ${APP_NAME}_scheduler
+        restart: unless-stopped
+        env_file:
+            - .env
+        depends_on:
+            - app
+        environment:
+            CONTAINER_ROLE: scheduler
+        networks:
+            - traefik-public
+    redis:
+        container_name: ${APP_NAME}_redis
+        image: redis
+        restart: unless-stopped
+        env_file:
+            - .env
+        command: redis-server --requirepass ${REDIS_PASSWORD}
+        user: root
+        networks:
+            - traefik-public
+        volumes:
+            - redisdata:/data
+    queue:
+        image: app
+        container_name: ${APP_NAME}_queue
+        restart: unless-stopped
+        env_file:
+            - .env
+        depends_on:
+            - app
+        environment:
+            CONTAINER_ROLE: queue
+        networks:
+            - traefik-public
+    nginx:
+        image: nginx:1.17-alpine
+        container_name: ${APP_NAME}_nginx
+        restart: unless-stopped
+        env_file:
+            - .env
+        deploy:
+            labels:
+                - traefik.enable=true
+                - traefik.port=80
+                - traefik.docker.network=traefik-public
+                - traefik.constraint-label=traefik-public
+                - traefik.http.routers.api_maliin-http.rule=Host(`${APP_URL:-localhost}`)
+                - traefik.http.routers.api_maliin-http.entrypoints=http
+                - traefik.http.routers.api_maliin-http.middlewares=https-redirect
+                - traefik.http.routers.api_maliin-https.rule=Host(`${APP_URL:-localhost}`)
+                - traefik.http.routers.api_maliin-https.entrypoints=https
+                - traefik.http.routers.api_maliin-https.tls=true
+                - traefik.http.routers.api_maliin-https.tls.certresolver=le
+                - traefik.http.services.api_maliin.loadbalancer.server.port=80
+            replicas: ${NGINX_REPLICAS:-1}
+        depends_on:
+            - app
+        healthcheck:
+            test: nginx -t || exit 1
+            interval: 20s
+            retries: 10
+            start_period: 30s
+            timeout: 10s
+        ports:
+            - ${PORT}:80
+        volumes:
+            - ./:/var/www/
+            - ./docker/nginx:/etc/nginx/conf.d
+        networks:
+            - traefik-public
+networks:
+    traefik-public:
+        external: true
+volumes:
+    redisdata:
+        driver: local

@@ -1,0 +1,30 @@
+version: '3.4'
+services:
+  composer:
+    image: composer:2.3.2
+    container_name: composer
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+  node:
+    image: node:14-alpine
+    container_name: node
+    env_file:
+      - .env
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+      
+  robot:
+    build:
+      context: ./
+      dockerfile: docker/robot/Dockerfile
+    container_name: robot
+    env_file:
+      - .env
+    working_dir: /testes/
+    volumes:
+      - ./tests/Integration:/testes/
+      - ./docker/robot/results:/report/
+    network_mode: host

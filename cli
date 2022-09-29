@@ -1,0 +1,61 @@
+#!/bin/bash
+
+docker_compose="docker-compose"
+node="docker-compose -f docker-compose-util.yml"
+composer="docker-compose -f docker-compose-util.yml"
+
+# if [ "$1" = "teste" ]; then
+#     echo "teste";
+# else
+#     echo "t";
+# fi;
+
+
+artisan_cmd(){
+    $docker_compose run --rm app php "$@"
+}
+
+test_cmd(){
+    $docker_compose run --rm app php artisan "$@"
+}
+
+docker_compose_up(){
+    docker_compose_down
+    $docker_compose up $1
+}
+
+docker_compose_build(){
+    docker_compose_down
+    $docker_compose build $1
+}
+
+docker_compose_down(){
+    $docker_compose down $1
+}
+
+composer_build(){
+    $composer build composer
+}
+
+composer_cmd(){
+    composer_build
+    $composer run --rm composer "$@"
+}
+
+npm_build(){
+    $node build npm
+}
+
+npm_cmd(){
+    npm_build
+    $composer run --rm node "$@"
+}
+case "$1" in
+    "up") docker_compose_up $2;;
+    "down") docker_compose_down $2 ;;
+    "build") docker_compose_build $2 ;;
+    "composer") composer_cmd "$@" ;;
+    "npm") npm_cmd "$@" ;;
+    "artisan") artisan_cmd "$@" ;;
+    "test") test_cmd "$@" ;;
+esac
