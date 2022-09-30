@@ -3,6 +3,7 @@
 docker_compose="docker-compose"
 node="docker-compose -f docker-compose-util.yml"
 composer="docker-compose -f docker-compose-util.yml"
+pgsql="docker-compose -f $(pwd)/docker/postgres/docker-compose.yml"
 
 # if [ "$1" = "teste" ]; then
 #     echo "teste";
@@ -15,12 +16,23 @@ artisan_cmd(){
     $docker_compose run --rm app php "$@"
 }
 
+pgsql_cmd_up(){
+    $pgsql up -d
+}
+
+pgsql_cmd_down(){
+    $pgsql down
+}
+
 test_cmd(){
     $docker_compose run --rm app php artisan "$@"
 }
 
 docker_compose_up(){
+    pgsql_cmd_down
     docker_compose_down
+    pgsql_cmd_up
+    sleep 5
     $docker_compose up $1
 }
 
@@ -58,4 +70,6 @@ case "$1" in
     "npm") npm_cmd "$@" ;;
     "artisan") artisan_cmd "$@" ;;
     "test") test_cmd "$@" ;;
+    "start-pgsql") pgsql_cmd_up ;;
+    "stop-pgsql") pgsql_cmd_down ;;
 esac
