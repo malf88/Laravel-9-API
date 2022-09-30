@@ -13,14 +13,17 @@
         "laravel/framework": "^9.19",
         "laravel/horizon": "5.x",
         "laravel/sanctum": "^3.0",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "php-open-source-saver/jwt-auth": "^2.0",
+        "spatie/data-transfer-object": "^3.9",
+        "spatie/laravel-route-attributes": "^1.14"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
+        "phpunit/phpunit": "^9.5",
         "spatie/laravel-ignition": "^1.0"
     },
     "autoload": {
