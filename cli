@@ -1,8 +1,8 @@
 #!/bin/bash
 
 docker_compose="docker-compose"
-node="docker-compose -f docker-compose-util.yml"
-composer="docker-compose -f docker-compose-util.yml"
+node="docker-compose -f $(pwd)/docker/utils/docker-compose.yml"
+composer="docker-compose -f $(pwd)/docker/utils/docker-compose.yml"
 pgsql="docker-compose -f $(pwd)/docker/postgres/docker-compose.yml"
 
 # if [ "$1" = "teste" ]; then
@@ -66,7 +66,7 @@ case "$1" in
     "up") docker_compose_up $2;;
     "down") docker_compose_down $2 ;;
     "build") docker_compose_build $2 ;;
-    "composer") composer_cmd "$@" ;;
+    "composer") composer_cmd "$@" --ignore-platform-reqs ;;
     "npm") npm_cmd "$@" ;;
     "artisan") artisan_cmd "$@" ;;
     "test") test_cmd "$@" ;;
