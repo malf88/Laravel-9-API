@@ -10,6 +10,7 @@ use App\Domain\Auth\DTO\UserDTO;
 use App\Domain\Auth\Helper\AuthHelper;
 use App\Domain\Auth\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 
 class AuthBusiness implements AuthBusinessInterface
@@ -24,16 +25,18 @@ class AuthBusiness implements AuthBusinessInterface
     public function login(UserDTO $user): AuthDTO
     {
         $token = AuthHelper::attempt($user->toArray());
+
         if (!$token) {
             throw new UnauthorizedException();
         }
-        $user = new UserDTO(AuthHelper::user());
+        $user = new UserDTO(AuthHelper::user()->toArray());
         return new AuthDTO(
             status: 'success',
             user: $user,
             authorization: [
                 'token' => $token,
-                'type' => 'bearer'
+                'type' => 'bearer',
+                'expires_in' => AuthHelper::factory()->getTTL() * 60
             ]
         );
 
@@ -41,17 +44,18 @@ class AuthBusiness implements AuthBusinessInterface
 
     public function register(UserDTO $userDTO): AuthDTO
     {
+
         $user = $this->authRepository->insertUser($userDTO);
 
-        $token = AuthHelper::attempt($user->toArray());
+        $token = AuthHelper::attempt($userDTO->toArray());
 
         return new AuthDTO(
             status: 'success',
-            message: 'User created successfully',
             user: $user,
             authorization: [
                 'token' => $token,
                 'type' => 'bearer',
+                'expires_in' => AuthHelper::factory()->getTTL() * 60
             ]
         );
     }
@@ -59,7 +63,7 @@ class AuthBusiness implements AuthBusinessInterface
     public function refresh(): AuthDTO
     {
         $user = new UserDTO(AuthHelper::user()->toArray());
-        $token = AuthHelper::refresh();
+        $token = AuthHelper::refresh(true, true);
 
         return new AuthDTO(
             status: 'success',
@@ -68,6 +72,7 @@ class AuthBusiness implements AuthBusinessInterface
             authorization: [
                 'token' => $token,
                 'type' => 'bearer',
+                'expires_in' => AuthHelper::factory()->getTTL() * 60
             ]
         );
     }
