@@ -2,12 +2,12 @@
 
 namespace App\Application\Exceptions;
 
-use \Exception;
+use Exception;
 
 class UnauthorizedException extends Exception
 {
     public function __construct()
     {
-        parent::__construct("Acesso não autorizado", '401');
+        parent::__construct('Acesso não autorizado', '401');
     }
 }

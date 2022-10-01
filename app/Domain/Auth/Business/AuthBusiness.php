@@ -8,28 +8,23 @@ use App\Domain\Auth\Contracts\AuthRepositoryInterface;
 use App\Domain\Auth\DTO\AuthDTO;
 use App\Domain\Auth\DTO\UserDTO;
 use App\Domain\Auth\Helper\AuthHelper;
-use App\Domain\Auth\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
 
 class AuthBusiness implements AuthBusinessInterface
 {
     public function __construct(
         private AuthRepositoryInterface $authRepository
-    )
-    {
+    ) {
     }
-
 
     public function login(UserDTO $user): AuthDTO
     {
         $token = AuthHelper::attempt($user->toArray());
 
-        if (!$token) {
+        if (! $token) {
             throw new UnauthorizedException();
         }
         $user = new UserDTO(AuthHelper::user()->toArray());
+
         return new AuthDTO(
             status: 'success',
             user: $user,
@@ -39,12 +34,10 @@ class AuthBusiness implements AuthBusinessInterface
                 'expires_in' => AuthHelper::factory()->getTTL() * 60
             ]
         );
-
     }
 
     public function register(UserDTO $userDTO): AuthDTO
     {
-
         $user = $this->authRepository->insertUser($userDTO);
 
         $token = AuthHelper::attempt($userDTO->toArray());
@@ -55,7 +48,7 @@ class AuthBusiness implements AuthBusinessInterface
             authorization: [
                 'token' => $token,
                 'type' => 'bearer',
-                'expires_in' => AuthHelper::factory()->getTTL() * 60
+                'expires_in' => AuthHelper::factory()->getTTL() * 60,
             ]
         );
     }
@@ -72,10 +65,8 @@ class AuthBusiness implements AuthBusinessInterface
             authorization: [
                 'token' => $token,
                 'type' => 'bearer',
-                'expires_in' => AuthHelper::factory()->getTTL() * 60
+                'expires_in' => AuthHelper::factory()->getTTL() * 60,
             ]
         );
     }
-
-
 }

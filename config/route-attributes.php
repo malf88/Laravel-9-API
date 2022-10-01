@@ -1,4 +1,5 @@
 <?php
+
 return [
     /*
      *  Automatic registration of routes will only happen if this setting is `true`
@@ -15,10 +16,10 @@ return [
 
         app_path('Domain/Auth/Controller'),
 
-//        app_path('Domain/Auth/Controller') => [
-//           'prefix' => 'api',
-//           'middleware' => 'api',
-//        ],
+        //        app_path('Domain/Auth/Controller') => [
+        //           'prefix' => 'api',
+        //           'middleware' => 'api',
+        //        ],
 
     ],
 
@@ -26,6 +27,6 @@ return [
      * This middleware will be applied to all routes.
      */
     'middleware' => [
-        \Illuminate\Routing\Middleware\SubstituteBindings::class
-    ]
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    ],
 ];

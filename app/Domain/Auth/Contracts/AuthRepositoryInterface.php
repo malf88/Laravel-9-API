@@ -6,5 +6,5 @@ use App\Domain\Auth\DTO\UserDTO;
 
 interface AuthRepositoryInterface
 {
-    public function insertUser(UserDTO $userDTO):UserDTO;
+    public function insertUser(UserDTO $userDTO): UserDTO;
 }

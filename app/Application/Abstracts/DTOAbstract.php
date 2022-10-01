@@ -6,5 +6,4 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 abstract class DTOAbstract extends DataTransferObject
 {
-
 }

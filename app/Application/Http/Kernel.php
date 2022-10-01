@@ -2,7 +2,6 @@
 
 namespace App\Application\Http;
 
-use App\Application\Http\Middleware\JsonResponseMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel

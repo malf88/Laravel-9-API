@@ -6,5 +6,4 @@ use App\Application\Abstracts\AuthAbstract;
 
 class AuthHelper extends AuthAbstract
 {
-
 }

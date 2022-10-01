@@ -6,5 +6,4 @@ use Illuminate\Support\ServiceProvider;
 
 abstract class ServiceProviderAbstract extends ServiceProvider
 {
-
 }

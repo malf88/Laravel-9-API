@@ -9,13 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthRepository implements AuthRepositoryInterface
 {
-
-    public function insertUser(UserDTO $userDTO) : UserDTO
+    public function insertUser(UserDTO $userDTO): UserDTO
     {
         $user = new User($userDTO->toArray());
         $user->password = Hash::make($user->password);
         $user->save();
-        return new UserDTO($user->toArray());
 
+        return new UserDTO($user->toArray());
     }
 }

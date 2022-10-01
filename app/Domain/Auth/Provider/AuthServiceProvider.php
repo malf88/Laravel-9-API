@@ -12,6 +12,6 @@ class AuthServiceProvider extends ServiceProviderAbstract
 {
     public array $bindings = [
         AuthRepositoryInterface::class => AuthRepository::class,
-        AuthBusinessInterface::class => AuthBusiness::class
+        AuthBusinessInterface::class => AuthBusiness::class,
     ];
 }
