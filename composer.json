@@ -10,6 +10,7 @@
         "illuminate/contracts": "^9.0",
         "illuminate/queue": "^v9.0",
         "illuminate/support": "^v9.0",
+        "infection/infection": "^0.26.15",
         "laravel/framework": "^9.19",
         "laravel/horizon": "5.x",
         "laravel/sanctum": "^3.0",
@@ -20,7 +21,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "laravel/pint": "^1.0",
+        "laravel/pint": "^1.2",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5",
@@ -63,7 +64,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "infection/extension-installer": true
         }
     },
     "minimum-stability": "dev",

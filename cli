@@ -11,6 +11,9 @@ pgsql="docker-compose -f $(pwd)/docker/postgres/docker-compose.yml"
 #     echo "t";
 # fi;
 
+php_cmd(){
+    artisan_cmd "$@"
+}
 
 artisan_cmd(){
     $docker_compose run --rm app php "$@"
@@ -62,6 +65,19 @@ npm_cmd(){
     npm_build
     $composer run --rm node "$@"
 }
+infection_cmd(){
+    php_cmd ./vendor/bin/infection
+}
+
+pint_cmd(){
+    php_cmd  ./vendor/bin/pint -v
+}
+
+check_cmd(){
+    test_cmd test
+    infection_cmd
+    pint_cmd
+}
 case "$1" in
     "up") docker_compose_up $2;;
     "down") docker_compose_down $2 ;;
@@ -72,4 +88,8 @@ case "$1" in
     "test") test_cmd "$@" ;;
     "start-pgsql") pgsql_cmd_up ;;
     "stop-pgsql") pgsql_cmd_down ;;
+    "pint") pint_cmd;;
+    "infection") infection_cmd ;;
+    "check") check_cmd ;;
+    *) php_cmd "$@"
 esac
