@@ -11,7 +11,7 @@
         "illuminate/queue": "^v9.0",
         "illuminate/support": "^v9.0",
         "infection/infection": "^0.26.15",
-        "laravel/framework": "^9.19",
+        "laravel/framework": "v9.33.0",
         "laravel/horizon": "5.x",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
