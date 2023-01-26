@@ -1,7 +1,7 @@
 version: '3.5'
 services:
     app:
-        image: app
+        image: ${APP_NAME}_app
         container_name: ${APP_NAME}_app
         restart: unless-stopped
         build:
@@ -25,7 +25,7 @@ services:
         networks:
             - traefik-public
     scheduler:
-        image: app
+        image: ${APP_NAME}_app
         container_name: ${APP_NAME}_scheduler
         restart: unless-stopped
         env_file:
@@ -33,7 +33,8 @@ services:
         depends_on:
             - app
         environment:
-            CONTAINER_ROLE: scheduler
+            - CONTAINER_ROLE=scheduler
+            - USERID=${USERID:-1001}
         networks:
             - traefik-public
     redis:
@@ -49,7 +50,7 @@ services:
         volumes:
             - redisdata:/data
     queue:
-        image: app
+        image: ${APP_NAME}_app
         container_name: ${APP_NAME}_queue
         restart: unless-stopped
         env_file:
@@ -57,13 +58,18 @@ services:
         depends_on:
             - app
         environment:
-            CONTAINER_ROLE: queue
+            - CONTAINER_ROLE=queue
+            - USERID=${USERID:-1001}
         networks:
             - traefik-public
     nginx:
-        image: nginx:1.17-alpine
+        build:
+            context: ./
+            dockerfile: docker/nginx/Dockerfile
         container_name: ${APP_NAME}_nginx
         restart: unless-stopped
+        environment:
+            - APP_NAME=${APP_NAME}
         env_file:
             - .env
         deploy:
@@ -93,7 +99,7 @@ services:
             - ${PORT}:80
         volumes:
             - ./:/var/www/
-            - ./docker/nginx:/etc/nginx/conf.d
+            - ./docker/nginx/config:/etc/nginx/conf.d
         networks:
             - traefik-public
 networks:
