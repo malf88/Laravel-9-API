@@ -5,6 +5,8 @@ namespace App\Domain\Auth\Controller;
 use App\Application\Http\Controllers\Controller;
 use App\Domain\Auth\Contracts\AuthBusinessInterface;
 use App\Domain\Auth\DTO\UserDTO;
+use App\Domain\Auth\Request\AuthLoginRequest;
+use App\Domain\Auth\Request\AuthRegisterRequest;
 use Illuminate\Http\Request;
 use Spatie\RouteAttributes\Attributes\Middleware;
 use Spatie\RouteAttributes\Attributes\Patch;
@@ -21,7 +23,7 @@ class AuthController extends Controller
     }
 
     #[Post('register')]
-    public function create(Request $request)
+    public function create(AuthRegisterRequest $request)
     {
         $userDto = new UserDTO($request->all());
 
@@ -29,7 +31,7 @@ class AuthController extends Controller
     }
 
     #[Post('login')]
-    public function login(Request $request)
+    public function login(AuthLoginRequest $request)
     {
         $userDto = new UserDTO($request->all());
 
