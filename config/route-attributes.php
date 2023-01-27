@@ -12,16 +12,9 @@ return [
      *
      * Optionally, you can specify group configuration by using key/values
      */
-    'directories' => [
 
-        app_path('Domain/Auth/Controller'),
-
-        //        app_path('Domain/Auth/Controller') => [
-        //           'prefix' => 'api',
-        //           'middleware' => 'api',
-        //        ],
-
-    ],
+    'directories' => glob(app_path('Domain/') . '**/Controller' , GLOB_ONLYDIR)
+    ,
 
     /**
      * This middleware will be applied to all routes.
